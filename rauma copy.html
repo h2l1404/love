@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Day and Night Transition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and general styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(180deg, #87CEEB 0%, #FFDAB9 50%, #FF6347 100%);
+        }
+
+        body.night {
+            animation: skyTransition 2s ease-in-out forwards;
+            animation-delay: 2s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes skyTransition {
+            0% {
+                background: linear-gradient(180deg, #87CEEB 0%, #FFDAB9 50%, #FF6347 100%);
+            }
+
+            100% {
+                background: linear-gradient(180deg, #191970 0%, #4B0082 50%, #000033 100%);
+            }
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .sun,
+        .moon {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .sun {
+            background: radial-gradient(circle, #FFD700, #FFA500);
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        .moon {
+            background: radial-gradient(circle, #F0E68C, #BDB76B);
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            z-index: 2;
+        }
+
+        .sun.night {
+            animation: sunDown 5s ease-in-out forwards;
+            will-change: transform, opacity;
+        }
+
+        .moon.night {
+            animation: moonUp 5s ease-in-out forwards;
+            animation-fill-mode: forwards;
+            will-change: transform, opacity;
+        }
+
+        /* Sun Down Animation */
+        @keyframes sunDown {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate3d(35vw, 60vh, 0) scale(0.65);
+                opacity: 0;
+            }
+        }
+
+        /* Moon Up Animation */
+        @keyframes moonUp {
+            0% {
+                transform: translate3d(-35vw, 60vh, 0) scale(0.65);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translate3d(0, 0, 0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Clouds */
+        .cloud {
+            animation: moveClouds 25s linear infinite;
+        }
+
+        .cloud:nth-child(2) {
+            animation-delay: -10s;
+            transform: scale(0.8) translateY(20px);
+        }
+
+        .cloud:nth-child(3) {
+            animation-delay: -15s;
+            transform: scale(1.2) translateY(-10px);
+        }
+
+        @keyframes moveClouds {
+            0% {
+                transform: translateX(-300px) translateY(0);
+            }
+
+            50% {
+                transform: translateX(50vw) translateY(10px);
+            }
+
+            100% {
+                transform: translateX(100vw) translateY(0);
+            }
+        }
+
+        /* Snowflakes */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            animation: fall linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: translateY(50vh) translateX(20px) rotate(180deg);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(100vh) translateX(-10px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Stars */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite alternate;
+            opacity: 0;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Characters */
+        .car {
+            position: absolute;
+            top: 60%;
+            width: 150px;
+            animation: driveAcross 5s ease-out forwards, bounce 2s ease-in-out infinite;
+        }
+
+        .girl {
+            position: absolute;
+            top: 60%;
+            left: calc(50% + 100px);
+            width: 80px;
+            animation: wave 3s ease-in-out infinite;
+        }
+
+        @keyframes driveAcross {
+            0% {
+                left: -200px;
+            }
+
+            100% {
+                left: calc(50% - 100px);
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-5%) scale(1.02);
+            }
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(0) rotate(10deg);
+            }
+        }
+
+        /* Welcome Text */
+        .welcome-text {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+            z-index: 100;
+            filter: drop-shadow(0 2px 8px #0008);
+            text-align: center;
+            font-family: cursive;
+            font-weight: bold;
+            font-size: clamp(24px, 5vw, 36px);
+            letter-spacing: 4px;
+            color: #fff;
+            animation: waveText 3s ease-in-out infinite alternate;
+            text-transform: uppercase;
+            stroke: #ffd700;
+            -webkit-text-stroke: 2px #ffd700;
+            paint-order: stroke fill;
+        }
+
+        @keyframes waveText {
+            0% {
+                color: #fff;
+            }
+
+            100% {
+                color: #ffd700;
+            }
+        }
+
+        /* Love Button */
+        .love-button {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            background: linear-gradient(135deg, #ff6b9d, #ff99cc, #ffb3d9);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+            transition: all 0.3s ease;
+            animation: pulseButton 2s ease-in-out infinite;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .love-button:hover {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 107, 157, 0.6);
+            background: linear-gradient(135deg, #ff99cc, #ffb3d9, #ff6b9d);
+        }
+
+        .love-button:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        @keyframes pulseButton {
+            0% {
+                box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 15px 40px rgba(255, 107, 157, 0.7);
+            }
+
+            100% {
+                box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+            }
+        }
+
+        /* Love Message Modal */
+        .love-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .love-modal.show {
+            display: flex;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .love-message {
+            background: linear-gradient(135deg, #fff, #ffe6f2);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .love-message h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 32px;
+            color: #ff6b9d;
+            margin-bottom: 20px;
+            animation: heartBeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartBeat {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .love-message p {
+            font-family: 'Arial', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeInText 0.8s ease-in-out forwards;
+        }
+
+        .love-message p:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .love-message p:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .love-message p:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+
+        .love-message p:nth-child(5) {
+            animation-delay: 0.8s;
+        }
+
+        .love-message p:nth-child(6) {
+            animation-delay: 1.0s;
+        }
+
+        @keyframes fadeInText {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #ff6b9d;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: #ff99cc;
+            transform: scale(1.2);
+        }
+
+        .floating-hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: #ff99cc;
+            font-size: 20px;
+            animation: floatHeart 3s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) scale(1);
+            }
+
+            90% {
+                opacity: 1;
+                transform: translateY(-10vh) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-20vh) scale(0);
+            }
+        }
+
+        /* Enhanced Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #87CEEB 0%, #FF99CC 50%, #FFDAB9 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+            animation: gradientShift 5s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background: linear-gradient(135deg, #87CEEB 0%, #FF99CC 50%, #FFDAB9 100%);
+            }
+
+            50% {
+                background: linear-gradient(135deg, #FFDAB9 0%, #87CEEB 50%, #FF99CC 100%);
+            }
+
+            100% {
+                background: linear-gradient(135deg, #87CEEB 0%, #FF99CC 50%, #FFDAB9 100%);
+            }
+        }
+
+        .loading-text-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .loading-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(36px, 6vw, 48px);
+            color: #ff482c;
+            text-align: center;
+            letter-spacing: 3px;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 2.5s steps(12, end) forwards, loveGlow 1.5s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 10px rgba(255, 153, 204, 0.7));
+            margin-right: 10px;
+            z-index: 9999;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes loveGlow {
+            0% {
+                text-shadow: 0 0 5px rgba(255, 153, 204, 0.5), 0 0 10px rgba(255, 255, 255, 0.3);
+                transform: scale(1);
+            }
+
+            100% {
+                text-shadow: 0 0 20px rgba(255, 153, 204, 0.9), 0 0 30px rgba(255, 255, 255, 0.5);
+                transform: scale(1.1);
+            }
+        }
+
+        .heart-svg {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            animation: pulse 1.5s ease-in-out infinite, rotateHeart 4s linear infinite;
+            z-index: 10;
+        }
+
+        .extra-heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            animation: pulse 1.5s ease-in-out infinite, float 3s ease-in-out infinite;
+            z-index: 10;
+            opacity: 0.7;
+        }
+
+        .extra-heart:nth-child(2) {
+            width: 25px;
+            height: 25px;
+            animation-delay: -0.5s;
+        }
+
+        .extra-heart:nth-child(3) {
+            width: 15px;
+            height: 15px;
+            animation-delay: -1s;
+        }
+
+        .extra-heart:nth-child(4) {
+            width: 30px;
+            height: 30px;
+            animation-delay: -1.5s;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 5px rgba(255, 153, 204, 0.5));
+            }
+
+            50% {
+                transform: scale(1.3);
+                filter: drop-shadow(0 0 15px rgba(255, 153, 204, 0.8));
+            }
+
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 5px rgba(255, 153, 204, 0.5));
+            }
+        }
+
+        @keyframes rotateHeart {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(10deg);
+            }
+
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        .loading-cloud {
+            position: absolute;
+            animation: moveLoadingClouds 15s linear infinite;
+            opacity: 0.7;
+        }
+
+        .loading-cloud:nth-child(2) {
+            animation-delay: -5s;
+            transform: scale(0.9) translateY(50px);
+        }
+
+        .loading-cloud:nth-child(3) {
+            animation-delay: -10s;
+            transform: scale(1.1) translateY(-30px);
+        }
+
+        @keyframes moveLoadingClouds {
+            0% {
+                transform: translateX(-200px) translateY(0);
+            }
+
+            50% {
+                transform: translateX(50vw) translateY(20px);
+            }
+
+            100% {
+                transform: translateX(100vw) translateY(0);
+            }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            animation: sparkle 1.5s ease-in-out infinite;
+            opacity: 0;
+            z-index: 10;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading-screen">
+        <svg class="loading-cloud" width="200" height="80">
+            <ellipse cx="100" cy="40" rx="70" ry="30" fill="white" />
+            <ellipse cx="150" cy="40" rx="60" ry="25" fill="white" />
+            <ellipse cx="120" cy="30" rx="80" ry="35" fill="white" />
+        </svg>
+        <svg class="loading-cloud" width="180" height="70">
+            <ellipse cx="90" cy="35" rx="60" ry="25" fill="white" />
+            <ellipse cx="130" cy="35" rx="50" ry="20" fill="white" />
+            <ellipse cx="110" cy="25" rx="70" ry="30" fill="white" />
+        </svg>
+        <svg class="loading-cloud" width="220" height="90">
+            <ellipse cx="110" cy="45" rx="80" ry="35" fill="white" />
+            <ellipse cx="160" cy="45" rx="70" ry="30" fill="white" />
+            <ellipse cx="130" cy="35" rx="90" ry="40" fill="white" />
+        </svg>
+        <div class="loading-text-container">
+            <svg class="heart-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#ff99cc"
+                    d="M50 88.87C17.73 66.47 0 44.76 0 28.29 0 12.29 12.29 0 28.29 0c9.24 0 17.47 4.27 23 10.94C56.53 4.27 64.76 0 74 0 90 0 102.29 12.29 102.29 28.29c0 16.47-17.73 38.18-50 60.58L50 88.87z" />
+            </svg>
+            <div class="loading-text">Xin Chào Bé Mây</div>
+            <svg class="extra-heart" style="top: -30px; left: -50px;" viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill="#ff99cc"
+                    d="M50 88.87C17.73 66.47 0 44.76 0 28.29 0 12.29 12.29 0 28.29 0c9.24 0 17.47 4.27 23 10.94C56.53 4.27 64.76 0 74 0 90 0 102.29 12.29 102.29 28.29c0 16.47-17.73 38.18-50 60.58L50 88.87z" />
+            </svg>
+            <svg class="extra-heart" style="top: -20px; right: -60px;" viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill="#ff99cc"
+                    d="M50 88.87C17.73 66.47 0 44.76 0 28.29 0 12.29 12.29 0 28.29 0c9.24 0 17.47 4.27 23 10.94C56.53 4.27 64.76 0 74 0 90 0 102.29 12.29 102.29 28.29c0 16.47-17.73 38.18-50 60.58L50 88.87z" />
+            </svg>
+            <svg class="extra-heart" style="bottom: -25px; left: -40px;" viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill="#ff99cc"
+                    d="M50 88.87C17.73 66.47 0 44.76 0 28.29 0 12.29 12.29 0 28.29 0c9.24 0 17.47 4.27 23 10.94C56.53 4.27 64.76 0 74 0 90 0 102.29 12.29 102.29 28.29c0 16.47-17.73 38.18-50 60.58L50 88.87z" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="container" style="display:none;">
+        <!-- SVG Sky -->
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <!-- Moon -->
+            <g class="moon">
+                <circle cx="220" cy="80" r="40" fill="white" />
+            </g>
+
+            <!-- Sun -->
+            <circle class="sun" cx="120" cy="80" r="50" fill="yellow" />
+
+            <!-- Clouds -->
+            <g class="cloud">
+                <ellipse cx="300" cy="120" rx="70" ry="40" fill="white" />
+                <ellipse cx="370" cy="120" rx="70" ry="40" fill="white" />
+                <ellipse cx="340" cy="100" rx="80" ry="50" fill="white" />
+            </g>
+            <g class="cloud">
+                <ellipse cx="600" cy="80" rx="60" ry="30" fill="white" />
+                <ellipse cx="660" cy="80" rx="60" ry="30" fill="white" />
+                <ellipse cx="630" cy="60" rx="70" ry="40" fill="white" />
+            </g>
+            <g class="cloud">
+                <ellipse cx="900" cy="150" rx="80" ry="50" fill="white" />
+                <ellipse cx="970" cy="150" rx="80" ry="50" fill="white" />
+                <ellipse cx="940" cy="130" rx="90" ry="60" fill="white" />
+            </g>
+        </svg>
+
+        <!-- Welcome Text -->
+        <h1 class="welcome-text">THU DAU MOT CITY</h1>
+
+        <!-- Love Button -->
+        <button class="love-button" id="loveButton">
+            💕 Lời Chúc Yêu Thương 💕
+        </button>
+
+        <!-- Characters -->
+        <div style="background: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%2280%22 viewBox=%220 0 150 80%22><rect x=%2210%22 y=%2240%22 width=%22100%22 height=%2225%22 fill=%23ff6b9d rx=%225%22/><circle cx=%2225%22 cy=%2270%22 r=%228%22 fill=%23333/><circle cx=%2295%22 cy=%2270%22 r=%228%22 fill=%23333/><rect x=%2220%22 y=%2220%22 width=%2270%22 height=%2220%22 fill=%23ffb3d9 rx=%2210%22/></svg>') center/contain no-repeat; width: 150px; height: 80px;"
+            class="car" id="car"></div>
+
+        <div style="background: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%22120%22 viewBox=%220 0 80 120%22><circle cx=%2240%22 cy=%2225%22 r=%2215%22 fill=%23ffdbac/><rect x=%2225%22 y=%2240%22 width=%2230%22 height=%2240%22 fill=%23ff99cc rx=%2215%22/><rect x=%2220%22 y=%2280%22 width=%2240%22 height=%2225%22 fill=%232196f3 rx=%225%22/><rect x=%2215%22 y=%22105%22 width=%2215%22 height=%2215%22 fill=%23795548 rx=%223%22/><rect x=%2250%22 y=%22105%22 width=%2215%22 height=%2215%22 fill=%23795548 rx=%223%22/><path d=%22M25 45 Q15 35 25 35%22 stroke=%23333 stroke-width=%222%22 fill=%22none%22/></svg>') center/contain no-repeat; width: 80px; height: 120px;"
+            class="girl" id="girl"></div>
+
+
+
+        <!-- Love Message Modal -->
+        <div class="love-modal" id="loveModal">
+            <div class="love-message">
+                <button class="close-button" id="closeButton">×</button>
+                <h2>💖 Chúc Mừng Ngày Mới Bé Mây 💖</h2>
+                <p><strong>🌅 Chào buổi sáng em yêu!</strong></p>
+                <p>🍞 Nhớ ăn sáng đầy đủ nhé! Một ly sữa ấm, bánh mì thơm ngon sẽ cho em năng lượng cả ngày.</p>
+                <p>☀️ Hôm nay là một ngày mới tuyệt vời, em hãy mỉm cười và đón nhận những điều tốt đẹp nhé!</p>
+                <p>💪 Em là cô gái mạnh mẽ và tuyệt vời nhất, hãy tự tin và làm những gì em yêu thích!</p>
+                <p>💕 Dù ở đâu, anh luôn yêu thương và nhớ em rất nhiều. Em là ánh sáng trong cuộc đời anh!</p>
+                <p><strong>🌈 Chúc em có một ngày thật vui vẻ và hạnh phúc! Yêu em nhiều lắm! 💖</strong></p>
+            </div>
+            <div class="floating-hearts" id="floatingHearts"></div>
+        </div>
+
+        <script>
+            // Create stars for night sky, handle loading screen, and add sparkles
+            window.onload = () => {
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.opacity = 0;
+                    setTimeout(() => {
+                        document.getElementById('loading-screen').style.display = 'none';
+                        document.querySelector('.container').style.display = '';
+                        document.body.classList.add('night');
+                        document.querySelector('.sun').classList.add('night');
+                        document.querySelector('.moon').classList.add('night');
+                        createStars();
+                    }, 500);
+                }, 8000);
+
+                // Create sparkles around the heart
+                const loadingTextContainer = document.querySelector('.loading-text-container');
+                function createSparkle() {
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle');
+                    sparkle.style.left = `calc(50% + ${Math.random() * 100 - 50}px)`;
+                    sparkle.style.top = `calc(50% + ${Math.random() * 40 - 20}px)`;
+                    sparkle.style.animationDelay = Math.random() * 0.5 + 's';
+                    loadingTextContainer.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 1500);
+                }
+
+                setInterval(createSparkle, 200);
+            };
+
+            // Love Button Event Listeners
+            const loveButton = document.getElementById('loveButton');
+            const loveModal = document.getElementById('loveModal');
+            const closeButton = document.getElementById('closeButton');
+            const floatingHearts = document.getElementById('floatingHearts');
+
+            loveButton.addEventListener('click', () => {
+                loveModal.classList.add('show');
+                createFloatingHearts();
+            });
+
+            closeButton.addEventListener('click', () => {
+                loveModal.classList.remove('show');
+            });
+
+            loveModal.addEventListener('click', (e) => {
+                if (e.target === loveModal) {
+                    loveModal.classList.remove('show');
+                }
+            });
+
+            // Create floating hearts animation
+            function createFloatingHearts() {
+                const hearts = ['💖', '💕', '💗', '💓', '💝', '❤️', '🥰', '😘'];
+
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        const heart = document.createElement('div');
+                        heart.classList.add('floating-heart');
+                        heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+                        heart.style.left = Math.random() * 100 + '%';
+                        heart.style.animationDelay = Math.random() * 2 + 's';
+                        heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                        floatingHearts.appendChild(heart);
+
+                        setTimeout(() => {
+                            if (heart.parentNode) {
+                                heart.remove();
+                            }
+                        }, 5000);
+                    }, i * 200);
+                }
+            }
+
+            // Create snowflakes with varied designs
+            const container = document.querySelector('.container');
+            const snowflakeTypes = ['❄', '❅', '❆'];
+            function createSnowflake() {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.animationDuration = Math.random() * 4 + 3 + 's';
+                snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+                snowflake.innerHTML = snowflakeTypes[Math.floor(Math.random() * snowflakeTypes.length)];
+
+                container.appendChild(snowflake);
+                setTimeout(() => snowflake.remove(), 7000);
+            }
+
+            setInterval(createSnowflake, 150);
+
+            // Create twinkling stars
+            function createStars() {
+                for (let i = 0; i < 50; i++) {
+                    const star = document.createElement('div');
+                    star.classList.add('star');
+                    star.style.width = Math.random() * 3 + 1 + 'px';
+                    star.style.height = star.style.width;
+                    star.style.left = Math.random() * 100 + 'vw';
+                    star.style.top = Math.random() * 50 + 'vh';
+                    star.style.animationDelay = Math.random() * 2 + 's';
+                    star.style.animationDuration = Math.random() * 2 + 1 + 's';
+                    setTimeout(() => star.style.opacity = 0.7, 10000);
+                    container.appendChild(star);
+                }
+            }
+
+            // Random love messages for variety
+            const loveMessages = [
+                {
+                    title: "💖 Chúc Mừng Ngày Mới Bé Mây 💖",
+                    messages: [
+                        "<strong>🌅 Chào buổi sáng em yêu!</strong>",
+                        "🍞 Nhớ ăn sáng đầy đủ nhé! Một ly sữa ấm, bánh mì thơm ngon sẽ cho em năng lượng cả ngày.",
+                        "☀️ Hôm nay là một ngày mới tuyệt vời, em hãy mỉm cười và đón nhận những điều tốt đẹp nhé!",
+                        "💪 Em là cô gái mạnh mẽ và tuyệt vời nhất, hãy tự tin và làm những gì em yêu thích!",
+                        "💕 Dù ở đâu, anh luôn yêu thương và nhớ em rất nhiều. Em là ánh sáng trong cuộc đời anh!",
+                        "<strong>🌈 Chúc em có một ngày thật vui vẻ và hạnh phúc! Yêu em nhiều lắm! 💖</strong>"
+                    ]
+                },
+                {
+                    title: "🌸 Yêu Thương Gửi Tới Em 🌸",
+                    messages: [
+                        "<strong>🌺 Em ơi, một ngày mới đã bắt đầu rồi!</strong>",
+                        "🥛 Đừng quên uống nước và ăn sáng nhé! Sức khỏe của em là điều anh quan tâm nhất.",
+                        "🌟 Em luôn tỏa sáng như ngôi sao trong lòng anh, hãy tự tin và rạng rỡ nhé!",
+                        "🦋 Mỗi ngày với em là một món quà tuyệt vời mà cuộc sống dành tặng cho anh.",
+                        "💌 Anh gửi em tất cả tình yêu và sự ủng hộ, em không bao giờ cô đơn đâu!",
+                        "<strong>🎀 Chúc bé Mây có một ngày ngọt ngào như chính em vậy! 💝</strong>"
+                    ]
+                }
+            ];
+
+            // Update love message content randomly
+            let currentMessageIndex = 0;
+            loveButton.addEventListener('click', () => {
+                const messageData = loveMessages[currentMessageIndex];
+                const loveMessageDiv = document.querySelector('.love-message');
+
+                // Update title
+                loveMessageDiv.querySelector('h2').innerHTML = messageData.title;
+
+                // Update messages
+                const paragraphs = loveMessageDiv.querySelectorAll('p');
+                messageData.messages.forEach((msg, index) => {
+                    if (paragraphs[index]) {
+                        paragraphs[index].innerHTML = msg;
+                    }
+                });
+
+                // Switch to next message for variety
+                currentMessageIndex = (currentMessageIndex + 1) % loveMessages.length;
+            });
+        </script>
+</body>
+
+</html>

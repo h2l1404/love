@@ -1,0 +1,30 @@
+ /* Thêm CSS mới */
+ .city-border {
+     stroke: #0037ff;
+     stroke-width: 7.61669;
+ }
+
+ .city-background {
+     fill: none;
+ }
+
+ .globe-border {
+     stroke: #ccc;
+     stroke-width: 8;
+ }
+
+ .modul-icon-globe {
+     fill: #fff;
+ }
+
+ .globe-background {
+     fill: #253F80;
+ }
+
+ .circle-globe {
+     fill: #1F3261;
+ }
+
+ .shadow {
+     fill: #ccc;
+ }
